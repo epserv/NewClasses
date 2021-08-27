@@ -1,13 +1,32 @@
 name: NewClasses
 main: ru.newplugin.newclasses.NewClasses
 version: ${project.version}
-authors: [BlusterySasha, Mykea, l_MrBoom_l]
-description: Плагин на классы.
+authors: [BlusterySasha, Mykea, l_MrBoom_l] # Original code credits go to NewPlugin studio (first 2 devs), code cleanup and bugfixes by l_MrBoom_l
+description: 'Плагин на классы (профессии).'
 api-version: 1.17
+
 #
 # © NewPlugin
 #
 commands:
-  sc:
-    aliases: [setclass]
-    permission: "newplugin.setclass"
+  setclass:
+    aliases: [sc]
+    permission: "newclasses.setclass"
+    usage: "§cИспользование: /setclass <игрок> <builder | miner | crafter | forger | nobody>"
+  class:
+    permission: "newclasses.class"
+    usage: "§cИспользование: /class"
+
+permissions:
+  newclasses.*:
+    children:
+      newclasses.setclass: true
+      newclasses.class: true
+    default: op
+    description: 'This permission allows using all NewClasses features.'
+  newclasses.setclass:
+    default: op
+    description: 'This permission allows using /setclass command.'
+  newclasses.class:
+    default: true
+    description: 'This permission allows using /class command.'

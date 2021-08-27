@@ -22,7 +22,8 @@ import java.util.Objects;
 public class NewClasses extends JavaPlugin {
 
 	public final Map<ClassType, YamlConfiguration> classConfigs = new HashMap<>();
-	private EventListener listener = null;
+	protected SelectionListener selectionListener = null;
+	protected ProfessionsListener professionsListener = null;
 
 	private Connection connection;
 	private Database database;
@@ -59,14 +60,20 @@ public class NewClasses extends JavaPlugin {
 		}
 
 		this.loadDatabase();
-		Objects.requireNonNull(this.getCommand("sc"), "Не найдена команда «/sc» в plugin.yml")
-				.setExecutor(new SCommand(this));
-		Bukkit.getPluginManager().registerEvents(this.listener = new EventListener(this), this);
+		Objects.requireNonNull(this.getCommand("setclass"), "Не найдена команда «/setclass» в plugin.yml")
+				.setExecutor(new CommandSetClass(this));
+		Objects.requireNonNull(this.getCommand("class"), "Не найдена команда «/class» в plugin.yml")
+				.setExecutor(new CommandClass(this));
+		Bukkit.getPluginManager().registerEvents(this.selectionListener = new SelectionListener(this), this);
+		Bukkit.getPluginManager().registerEvents(this.professionsListener = new ProfessionsListener(this), this);
 	}
 
 	public void onDisable() {
 		UIController.close();
-		HandlerList.unregisterAll(this.listener);
+		if (this.selectionListener != null)
+			HandlerList.unregisterAll(this.selectionListener);
+		if (this.professionsListener != null)
+			HandlerList.unregisterAll(this.professionsListener);
 	}
 
 	public Database getDatabase() {

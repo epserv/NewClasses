@@ -6,10 +6,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,13 +31,13 @@ public class UIInstance {
 	 * @deprecated в пользу {@link UIInstance#UIInstance(Component, int, String)}
 	 */
 	@Deprecated
-	public UIInstance(String title, int size, String id) {
+	public UIInstance(@NotNull String title, int size, @NotNull String id) {
 		this(PaperComponents.legacySectionSerializer().deserialize(title), size, id);
 	}
 
-	public UIInstance(Component title, int size, String id) {
+	public UIInstance(@NotNull Component title, int size, @NotNull String id) {
 		this.title = title;
-		this.inventory = Bukkit.createInventory(null, size, title);
+		this.inventory = Bukkit.createInventory(null, size, this.title);
 		this.buttons = new HashMap<>();
 		this.id = id;
 	}
@@ -67,31 +66,18 @@ public class UIInstance {
 	}
 	
 	public UIInstance update() {
-		Inventory i = Bukkit.createInventory(null, this.inventory.getSize(), this.title);
+		ItemStack[] items = new ItemStack[this.inventory.getSize()];
 		for (Integer slot : this.buttons.keySet()) {
 			Button button = this.buttons.get(slot);
-			
-			if (button == null) {
-				if (this.background == null)
-					continue;
-				
-				i.setItem(slot, new ItemStack(this.background));
-				continue;
-			}
-			
-			i.setItem(slot, button.getItem());
+			items[slot] = button != null ? button.getItem() : (this.background != null ? new ItemStack(this.background) : null);
 		}
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			InventoryView iv = p.getOpenInventory();
-			if (iv.getType() != InventoryType.CRAFTING && iv.getTopInventory().equals(this.inventory))
-				p.openInventory(i);
-		}
-		this.inventory = i;
+
+		this.inventory.setContents(items);
 		return this;
 	}
 	
 
-	public String getId() {
+	public String getID() {
 		return this.id;
 	}
 
@@ -109,6 +95,11 @@ public class UIInstance {
 			return;
 		
 		this.buttons.get(slot).click(sender, this, slot);
+	}
+
+	@NotNull
+	public Component title() {
+		return this.title;
 	}
 
 }

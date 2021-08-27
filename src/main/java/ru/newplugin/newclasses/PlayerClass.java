@@ -3,7 +3,6 @@ package ru.newplugin.newclasses;
 import org.bukkit.Material;
 import org.bukkit.configuration.MemorySection;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -68,7 +67,6 @@ public class PlayerClass {
         return this.getCraft().contains(material);
     }
 
-    @Nullable
     public static PlayerClass getByID(int id) {
         return switch (id) {
             case 0 -> NOBODY;

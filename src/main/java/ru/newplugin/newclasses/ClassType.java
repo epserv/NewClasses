@@ -28,4 +28,14 @@ public enum ClassType {
 	public String getName() {
 		return this.name;
 	}
+
+	public static ClassType match(@NotNull String string) {
+		string = string.trim();
+		for (ClassType type : ClassType.values()) {
+			if (type.name().trim().equalsIgnoreCase(string) || type.getName().equalsIgnoreCase(string)) {
+				return type;
+			}
+		}
+		return null;
+	}
 }

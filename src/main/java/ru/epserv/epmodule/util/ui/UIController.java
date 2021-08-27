@@ -52,9 +52,9 @@ public class UIController {
 	public static void registerUI(@NotNull UIInstance instance) {
 		checkReady();
 
-		if (UIController.list.containsKey(instance.getId()))
-			throw new IllegalArgumentException("Specified instance (ID '" + instance.getId() + "') is already registered. Unregister it first.");
-		UIController.list.put(instance.getId(), instance);
+		if (UIController.list.containsKey(instance.getID()))
+			throw new IllegalArgumentException("Specified instance (ID '" + instance.getID() + "') is already registered. Unregister it first.");
+		UIController.list.put(instance.getID(), instance);
 	}
 	
 	public static void unregisterUI(@NotNull String id) {
